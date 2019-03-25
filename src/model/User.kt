@@ -1,6 +1,8 @@
 package gmidori.com.github.model
 
-import com.sun.media.sound.InvalidDataException
+class User {
+
+}
 
 fun UserSignUp(name: String, bankId: String, password: String) {
     //TODO: すでに登録しているかどうかを確認する
@@ -12,13 +14,8 @@ fun UserSignUp(name: String, bankId: String, password: String) {
         //TODO: bankId が不正のため処理を何もせずに返却
         return
     }
-}
 
-fun GetSetting(key: String) : String {
-    //TODO: DBをスキャンして設定を取ってくる
-    return when (key) {
-        "bank_endpoint" -> "http://example.com"
-        "bank_appid" -> "exapmle"
-        else -> throw InvalidDataException()
-    }
+    val bcrypt = org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder()
+    val hashedPassword = bcrypt.encode(password)
+
 }
