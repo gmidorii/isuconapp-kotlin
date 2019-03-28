@@ -1,5 +1,7 @@
 package gmidori.com.github.model
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+
 class User {
 
 }
@@ -15,7 +17,7 @@ fun UserSignUp(name: String, bankId: String, password: String) {
         return
     }
 
-    val bcrypt = org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder()
+    val bcrypt = BCryptPasswordEncoder()
     val hashedPassword = bcrypt.encode(password)
-
+    println(hashedPassword)
 }

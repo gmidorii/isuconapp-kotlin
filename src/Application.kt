@@ -1,5 +1,6 @@
 package gmidori.com.github
 
+import gmidori.com.github.model.UserSignUp
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -12,6 +13,7 @@ import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.routing.routing
 
+
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
 @Suppress("unused") // Referenced in application.conf
@@ -20,6 +22,9 @@ fun Application.module() {
         routing{
             get("/") {
                 call.respondText("Hello World!!", ContentType.Text.Html)
+            }
+            get("/hoge") {
+                call.respondText("Hoge!!!")
             }
             get("/signup") {
                 val postParameters = call.receiveParameters()
@@ -31,8 +36,12 @@ fun Application.module() {
                     call.respond(HttpStatusCode.BadRequest)
                     return@get
                 }
+
+                UserSignUp("", "", "password")
+
+                call.respondText("OK", status = HttpStatusCode.OK)
             }
+
         }
     }
 }
-
