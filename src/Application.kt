@@ -11,6 +11,7 @@ import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.Routing
 import io.ktor.routing.get
+import io.ktor.routing.post
 import io.ktor.routing.routing
 
 
@@ -26,18 +27,18 @@ fun Application.module() {
             get("/hoge") {
                 call.respondText("Hoge!!!")
             }
-            get("/signup") {
+            post("/signup") {
                 val postParameters = call.receiveParameters()
                 val name = postParameters.get("name")
                 val bankId = postParameters.get("bank_id")
                 val password = postParameters.get("password")
 
-                if (name == "" || bankId == "" || password == "") {
+                if (name.isNullOrBlank() || bankId.isNullOrBlank() || password.isNullOrBlank()) {
                     call.respond(HttpStatusCode.BadRequest)
-                    return@get
+                    return@post
                 }
 
-                UserSignUp("", "", "password")
+                UserSignUp(name, bankId, password)
 
                 call.respondText("OK", status = HttpStatusCode.OK)
             }
