@@ -13,27 +13,21 @@ object User: Table(name = "user") {
     val createdAt: Column<DateTime> = datetime("created_at")
 }
 
-fun UserSignUp(name: String, bankId: String, password: String) {
-    //TODO: すでに登録しているかどうかを確認する
-    val bankEndPoint = GetSetting("bank_endpoint")
-    val bookAppId = GetSetting("bank_appid")
-    val isuBank = IsuBank(bankEndPoint, bookAppId)
+fun UserSignUp(db: Database, name: String, bankId: String, password: String) {
+    val isubank = NewIsubank(db)
 
-    if (!isuBank.Check(bankId)) {
+    if (!isubank.Check(bankId)) {
         //TODO: bankId が不正のため処理を何もせずに返却
         return
     }
 
     val bcrypt = BCryptPasswordEncoder()
     val hashedPassword = bcrypt.encode(password)
-    println(hashedPassword)
 
-    Database.connect("jdbc:mysql://localhost:13306/isucoin?loc=Local&charset=utf8mb4",
-        driver = "com.mysql.cj.jdbc.Driver", user = "root", password = "root")
-    transaction {
+    transaction(db) {
         SchemaUtils.create(User)
 
-        User.insertIgnore {
+        User.insert {
             it[User.bankId] = bankId.toByteArray()
             it[User.userName] = name
             it[User.password] = hashedPassword.toByteArray()

@@ -13,12 +13,16 @@ import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
+import org.jetbrains.exposed.sql.Database
 
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
 @Suppress("unused") // Referenced in application.conf
 fun Application.module() {
+
+    val myDB = Database.connect("jdbc:mysql://localhost:13306/isucoin?loc=Local&charset=utf8mb4",
+        driver = "com.mysql.cj.jdbc.Driver", user = "root", password = "root")
 
     install(Routing) {
         routing{
@@ -39,7 +43,7 @@ fun Application.module() {
                     return@post
                 }
 
-                UserSignUp(name, bankId, password)
+                UserSignUp(myDB, name, bankId, password)
 
                 call.respondText("OK", status = HttpStatusCode.OK)
             }
